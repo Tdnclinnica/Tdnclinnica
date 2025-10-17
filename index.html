@@ -1,0 +1,395 @@
+<!-- ...existing code... -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hello World — Interactivo</title>
+  <style>
+    :root{
+      --bg1:#0f1724;
+      --bg2:#0b1020;
+      --glass: rgba(255,255,255,0.06);
+      --accent:#6EE7B7;
+      --accent-2:#60A5FA;
+      --text:#E6EEF8;
+      --muted:#98A0B3;
+    }
+
+    /* Fondo animado */
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,0.08), transparent),
+                  radial-gradient(900px 400px at 90% 90%, rgba(110,231,183,0.06), transparent),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    /* Tarjeta central */
+    .card{
+      width:min(920px,94vw);
+      max-width:920px;
+      min-height:420px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+      border-radius:18px;
+      padding:36px;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:28px;
+      align-items:center;
+      backdrop-filter: blur(6px) saturate(120%);
+    }
+
+    /* Panel izquierdo: saludo */
+    .hero{
+      padding:10px 6px;
+    }
+    .kicker{
+      color:var(--muted);
+      font-size:13px;
+      letter-spacing:1px;
+      margin-bottom:12px;
+      text-transform:uppercase;
+    }
+    h1{
+      font-size:48px;
+      line-height:1;
+      margin:0 0 12px 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .hello{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .hello .word{
+      font-weight:700;
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      font-size:56px;
+      padding:2px 6px;
+      border-radius:8px;
+    }
+
+    p.lead{
+      color:var(--muted);
+      margin:14px 0 22px 0;
+      max-width:55ch;
+      font-size:16px;
+    }
+
+    /* Controles */
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    button{
+      appearance:none;
+      border:0;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 6px 18px rgba(3,8,22,0.45);
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      font-weight:600;
+    }
+    button:active{transform:translateY(1px) scale(.997);}
+    .primary{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#042026;
+      box-shadow: 0 10px 30px rgba(96,165,250,0.12);
+    }
+    .muted{
+      color:var(--muted);
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    /* Panel derecho: preview y efectos */
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:stretch;
+      justify-content:center;
+    }
+    .preview{
+      flex:1;
+      display:grid;
+      place-items:center;
+      position:relative;
+      border-radius:12px;
+      padding:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      overflow:hidden;
+    }
+    .preview .big{
+      font-weight:800;
+      font-size:44px;
+      color:var(--text);
+      text-align:center;
+      letter-spacing:0.6px;
+      text-shadow: 0 6px 30px rgba(2,6,23,0.5);
+    }
+    .small{
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+      margin-top:6px;
+    }
+
+    footer.note{
+      color:var(--muted);
+      font-size:12px;
+      text-align:right;
+    }
+
+    /* efectos de letras */
+    .char{
+      display:inline-block;
+      transform-origin:50% 60%;
+      opacity:0;
+    }
+    .char.show{
+      animation:pop .55s cubic-bezier(.2,.9,.25,1) forwards;
+    }
+    @keyframes pop{
+      0%{opacity:0; transform:translateY(8px) scale(.9) rotateX(20deg);}
+      60%{opacity:1; transform:translateY(-6px) scale(1.06) rotateX(0deg);}
+      100%{opacity:1; transform:translateY(0) scale(1) rotateX(0deg);}
+    }
+
+    /* responsivo */
+    @media (max-width:880px){
+      .card{grid-template-columns:1fr; padding:22px;}
+      .hello .word{font-size:44px;}
+      h1{font-size:36px;}
+      .preview{height:160px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-label="Hello world interactivo">
+    <div class="hero">
+      <div class="kicker">Demo</div>
+      <h1>
+        <span class="hello">
+          <span id="greeting" aria-live="polite" class="word">Hello</span>
+          <span id="targetWord" class="word" style="font-size:36px;color:var(--text);background:none;">World!</span>
+        </span>
+      </h1>
+      <p class="lead">Un saludo interactivo y con animaciones: escribe, copia, cambia colores y activa confeti. Presiona "Enter" para reproducir la animación.</p>
+
+      <div class="controls" role="toolbar" aria-label="Controles de animación">
+        <button id="playBtn" class="primary" title="Escribir saludo">▶ Reproducir</button>
+        <button id="copyBtn" class="muted" title="Copiar 'Hello World' al portapapeles">📋 Copiar</button>
+        <button id="themeBtn" class="muted" title="Cambiar estilo">🎨 Tema</button>
+        <button id="confettiBtn" class="muted" title="Lanzar confeti">✨ Confeti</button>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="preview" id="preview">
+        <div>
+          <div class="big" id="livePreview">Hello World!</div>
+          <div class="small">Interactúa con los botones o presiona Enter</div>
+        </div>
+        <canvas id="confetti" style="position:absolute;inset:0;pointer-events:none;"></canvas>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input id="inputText" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)" placeholder="Escribe tu mensaje y pulsa Reproducir" aria-label="Texto del saludo"/>
+        <button id="randomBtn" class="muted" title="Generar mensaje aleatorio">🔀</button>
+      </div>
+
+      <footer class="note">Diseño: interactivo • Accessible • Sin librerías externas</footer>
+    </div>
+  </div>
+
+  <script>
+    // Elementos principales
+    const playBtn = document.getElementById('playBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const confettiBtn = document.getElementById('confettiBtn');
+    const randomBtn = document.getElementById('randomBtn');
+    const inputText = document.getElementById('inputText');
+    const greetingEl = document.getElementById('greeting');
+    const targetWordEl = document.getElementById('targetWord');
+    const livePreview = document.getElementById('livePreview');
+
+    // Escritura tipo "typewriter", con animación por caracteres
+    function splitToChars(text){
+      return Array.from(text).map(ch => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ch;
+        return span;
+      });
+    }
+
+    function animateText(container, text, speed=40, delayBase=40){
+      container.innerHTML = '';
+      const chars = splitToChars(text);
+      chars.forEach(c => container.appendChild(c));
+      chars.forEach((c,i) => {
+        setTimeout(()=> c.classList.add('show'), i*speed + (Math.random()*delayBase));
+      });
+      // Actualizar la vista previa al final
+      setTimeout(()=> livePreview.textContent = text, chars.length*speed + 200);
+    }
+
+    // Efecto confeti simple con canvas
+    function launchConfetti(times = 120){
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      function resize(){ canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const particles = [];
+      const colors = ['#60A5FA','#6EE7B7','#F0ABFC','#FDE68A','#FB7185'];
+
+      for(let i=0;i<times;i++){
+        particles.push({
+          x: Math.random()*canvas.width,
+          y: -Math.random()*canvas.height,
+          vx: (Math.random()-0.5)*6,
+          vy: Math.random()*6 + 2,
+          r: 6*Math.random()+4,
+          c: colors[Math.floor(Math.random()*colors.length)],
+          rot: Math.random()*360,
+          vr: (Math.random()-0.5)*10
+        });
+      }
+
+      let t0 = performance.now();
+      function frame(t){
+        const dt = (t - t0) / 16.66;
+        t0 = t;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 0.08*dt; // gravedad
+          p.rot += p.vr * dt;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot * Math.PI/180);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+          ctx.restore();
+        });
+        // eliminar los que salen de pantalla
+        for(let i=particles.length-1;i>=0;i--){
+          if(particles[i].y > canvas.height + 50) particles.splice(i,1);
+        }
+        if(particles.length > 0) requestAnimationFrame(frame);
+        else ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Temas de color
+    const themes = [
+      {accent:'#6EE7B7', accent2:'#60A5FA', bg1:'#071029', bg2:'#041322'},
+      {accent:'#FDE68A', accent2:'#FB7185', bg1:'#20111a', bg2:'#2a0f2f'},
+      {accent:'#C4B5FD', accent2:'#60A5FA', bg1:'#051021', bg2:'#0a1b2f'}
+    ];
+    let themeIdx = 0;
+    function applyTheme(i){
+      const t = themes[i % themes.length];
+      document.documentElement.style.setProperty('--accent', t.accent);
+      document.documentElement.style.setProperty('--accent-2', t.accent2);
+      document.documentElement.style.setProperty('--bg1', t.bg1);
+      document.documentElement.style.setProperty('--bg2', t.bg2);
+    }
+
+    // Acciones de botones
+    playBtn.addEventListener('click', ()=> {
+      const text = (inputText.value || 'Hello World!').trim();
+      animateText(greetingEl, text.split(' ')[0] || 'Hello', 40, 25);
+      animateText(targetWordEl, text.split(' ').slice(1).join(' ') || 'World!', 45, 20);
+      // ligero confetti al reproducir
+      launchConfetti(80);
+    });
+
+    copyBtn.addEventListener('click', async ()=>{
+      const text = (inputText.value || 'Hello World!');
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = '✅ Copiado';
+        setTimeout(()=> copyBtn.textContent = '📋 Copiar',1200);
+      }catch{
+        copyBtn.textContent = '❌ Error';
+        setTimeout(()=> copyBtn.textContent = '📋 Copiar',1200);
+      }
+    });
+
+    themeBtn.addEventListener('click', ()=> {
+      themeIdx = (themeIdx+1) % themes.length;
+      applyTheme(themeIdx);
+    });
+
+    confettiBtn.addEventListener('click', ()=> launchConfetti(180));
+
+    randomBtn.addEventListener('click', ()=> {
+      const samples = [
+        'Hola Mundo!',
+        '¡Qué tal, mundo!',
+        'Hello Universe!',
+        'Hola Lorena!',
+        'Hola desde VS Code!',
+        '¡Interactividad activada!'
+      ];
+      inputText.value = samples[Math.floor(Math.random()*samples.length)];
+    });
+
+    // Tecla Enter dispara animación
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') { playBtn.click(); }
+    });
+
+    // Inicialización: animar saludo por defecto
+    applyTheme(0);
+    requestAnimationFrame(()=> {
+      animateText(greetingEl, 'Hello', 35, 18);
+      animateText(targetWordEl, 'World!', 40, 18);
+    });
+
+    // Pequeño parallax del preview
+    const preview = document.getElementById('preview');
+    preview.addEventListener('mousemove', (e)=>{
+      const r = preview.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width/2)) / r.width;
+      const dy = (e.clientY - (r.top + r.height/2)) / r.height;
+      preview.style.transform = `perspective(800px) rotateX(${dy*6}deg) rotateY(${dx*6}deg) translateZ(6px)`;
+    });
+    preview.addEventListener('mouseleave', ()=> preview.style.transform = 'none');
+
+    // Mejoras: actualizar vista previa mientras se escribe
+    inputText.addEventListener('input', ()=> {
+      livePreview.textContent = inputText.value || 'Hello World!';
+    });
+  </script>
+</body>
+</html>
+<!-- ...existing code... -->
